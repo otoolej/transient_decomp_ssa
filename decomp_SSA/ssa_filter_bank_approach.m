@@ -37,7 +37,7 @@
 % John M. O' Toole, University College Cork
 % Started: 04-11-2016
 %
-% last update: Time-stamp: <2021-02-16 11:08:09 (otoolej)>
+% last update: Time-stamp: <2021-02-19 21:37:38 (otoolej)>
 %-------------------------------------------------------------------------------
 function [y, x_components, l, U] = ssa_filter_bank_approach(x, L, weights, db_plot)
 if(nargin<3 || isempty(weights)), weights = []; end
