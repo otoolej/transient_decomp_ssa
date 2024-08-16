@@ -38,7 +38,7 @@
 % John M. O' Toole, University College Cork
 % Started: 09-02-2021
 %
-% last update: Time-stamp: <2021-02-19 13:21:07 (otoolej)>
+% last update: Time-stamp: <2021-04-27 16:51:10 (otoolej)>
 %-------------------------------------------------------------------------------
 function x_st = shorttime_iter_SSA_decomp(x, fs, params, db_plot)
 if(nargin < 3 || isempty(params)), params = decomp_PARAMS; end
@@ -57,8 +57,8 @@ end
 
 
 
-% zero mean signal:
-x_mean = nanmean(x);
+% zero mean (or median) signal:
+x_mean = nanmedian(x);
 x = x - x_mean;
 
 
@@ -89,7 +89,7 @@ else
     % reflection extrapolation:
     x = [x fliplr(x(N - (N_pad - N):end - 1))];
 end
-ttime = (0:(length(x) - 1)) ./ fs;
+ttime = (0:(length(x) - 1)) ./ (1/6);
 
 if(db_verbose)
     fprintf('N_epochs=%d; Window length=%d; hop=%d; N=%d; N_pad=%d\n', ...
@@ -128,6 +128,12 @@ for k = 0:N_epochs - 1
     x_ssa_dct = iterative_SSA_decomposition(x_epoch, params.L_ssa_ev, params.SSA_METHOD, ...
                                             params.ITER_L_ssa_ev, params.USE_DCT, ...
                                             params.DCT_CUTOFF, false);
+    
+    
+    %---------------------------------------------------------------------
+    % post processing
+    %---------------------------------------------------------------------
+    x_ssa_dct = trim_transient_component(x_ssa_dct, fs, false);
 
     
     if(DBplot_iter)
